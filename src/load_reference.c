@@ -7,14 +7,17 @@
 #define IDSIZE 1024
 #define URLSIZE 2048
 
-struct reference {
+typedef struct reference {
 	char id[IDSIZE];
 	char url[URLSIZE];
-};
+} reference;
 
 void load_reference() {
 	FILE *ref_file = NULL;
-	int token, count = 0;
+	int token, count = 0, tok_index = 0,
+	arr_index = 0;
+	int i = 0, j = 0;
+	reference *ref_arr;
 
 	ref_file = fopen("./ref", "r");
 	if (ref_file == NULL) {
@@ -27,23 +30,33 @@ void load_reference() {
 			++count;
 	
 	printf("%d\n", count);
+	ref_arr = (reference*)calloc(count, sizeof(reference));
 
 	rewind(ref_file);
 
 	while ((token=fgetc(ref_file)) != EOF) {
 		if (token == '%') {
 			while ((token=fgetc(ref_file)) != EOF && token != '{')
-				if (token != '\n')
-					printf("%c", token);
+				if (token != '\n') {
+					ref_arr[arr_index].id[tok_index] = token;
+					++tok_index;
+				}
+			ref_arr[arr_index].id[tok_index] = '\0';
 			assert(token == '{');
 			if (token == '{')
 				ungetc(token, ref_file);
 		}
-		else if (token == '{')
+		else if (token == '{') {
 			while ((token=fgetc(ref_file)) != EOF && token != '}')
-				if (token != '\n')
-					printf("%c", token);
+				if (token != '\n') {
+					ref_arr[arr_index].url[tok_index] = token;
+					++tok_index;
+				}
+			ref_arr[arr_index].url[tok_index] = '\0';
+			++arr_index;
+		}
 		else if (isspace(token))
 			continue;
+		tok_index = 0;
 	}
 }
