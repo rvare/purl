@@ -29,6 +29,30 @@ int main() {
 		return 1;
 	}
 
+	while ((token=fgetc(ref_file)) != EOF) {
+		if (token == '%') {
+			while ((token=fgetc(ref_file)) != EOF && token != '{') {
+				printf("%c", token);
+			}
+			assert(token == '{');
+			ungetc(token, ref_file);
+		}
+		else if (token == '{') {
+			while ((token=fgetc(ref_file)) != EOF && token != '}') {
+				printf("%c", token);
+			}
+		}
+		else if (isspace(token)) {
+			continue;
+		}
+	}
+
+	if (ferror(ref_file)) {
+		fprintf(stderr, "Error with reference file\n");
+		return 1;
+	}
+
+	fclose(ref_file);
 
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == '{') {
@@ -58,6 +82,9 @@ int main() {
 		fprintf(stderr, "Error with output file");
 		return 1;
 	}
+
+	fclose(input_file);
+	fclose(output_file);
 
 	return 0;
 }
