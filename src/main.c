@@ -4,6 +4,8 @@
 #include <string.h>
 #include <assert.h>
 
+extern void load_reference();
+
 int main() {
 	FILE *ref_file = NULL,
 	*input_file = NULL,
@@ -28,6 +30,8 @@ int main() {
 		perror("Error with output file");
 		return 1;
 	}
+
+	load_reference();
 
 	while ((token=fgetc(ref_file)) != EOF) {
 		if (token == '%') {
