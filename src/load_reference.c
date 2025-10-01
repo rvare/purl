@@ -12,9 +12,9 @@ int get_token();
 int token;
 FILE *ref_file = NULL;
 
-reference* load_reference() {
+reference_array load_reference() {
 	int count = 0, tok_index = 0, arr_index = 0;
-	reference *ref_arr;
+	reference_array ref_arr;
 
 	open_reference_file();
 
@@ -22,7 +22,8 @@ reference* load_reference() {
 		if (token == '%')
 			++count;
 	
-	ref_arr = (reference*)calloc(count, sizeof(reference));
+	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
+	ref_arr.size = count;
 
 	rewind(ref_file);
 
@@ -30,10 +31,10 @@ reference* load_reference() {
 		if (token == '%') {
 			while ((token=fgetc(ref_file)) != EOF && token != '{')
 				if (token != '\n') {
-					ref_arr[arr_index].id[tok_index] = token;
+					ref_arr.arr[arr_index].id[tok_index] = token;
 					++tok_index;
 				}
-			ref_arr[arr_index].id[tok_index] = '\0';
+			ref_arr.arr[arr_index].id[tok_index] = '\0';
 			assert(token == '{');
 			if (token == '{')
 				ungetc(token, ref_file);
@@ -41,10 +42,10 @@ reference* load_reference() {
 		else if (token == '{') {
 			while (get_token() != EOF && token != '}')
 				if (token != '\n') {
-					ref_arr[arr_index].url[tok_index] = token;
+					ref_arr.arr[arr_index].url[tok_index] = token;
 					++tok_index;
 				}
-			ref_arr[arr_index].url[tok_index] = '\0';
+			ref_arr.arr[arr_index].url[tok_index] = '\0';
 			++arr_index;
 		}
 		else if (isspace(token))

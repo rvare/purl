@@ -6,8 +6,8 @@
 
 #include "../include/url_preprocessor.h"
 
-extern reference* load_reference();
-extern void process_macro(FILE*, FILE*);
+extern reference_array load_reference();
+extern void process_macro(FILE*, FILE*, reference_array*);
 
 int main() {
 	FILE *input_file = NULL,
@@ -27,15 +27,15 @@ int main() {
 		return 1;
 	}
 
-	reference *ref_arr = load_reference();
-	assert(ref_arr != NULL);
+	reference_array ref_arr = load_reference();
+	assert(ref_arr.arr != NULL);
 
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == '{') {
 			token = fgetc(input_file);
 			if (token == '%') {
 				printf("Call function\n");
-				process_macro(input_file, output_file);
+				process_macro(input_file, output_file, &ref_arr);
 			}
 			else {
 				assert(token != '%');
