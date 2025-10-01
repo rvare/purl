@@ -12,20 +12,19 @@ typedef struct reference {
 	char url[URLSIZE];
 } reference;
 
+void open_reference_file();
+int get_token();
+
+int token;
+FILE *ref_file = NULL;
+
 void load_reference() {
-	FILE *ref_file = NULL;
-	int token, count = 0, tok_index = 0,
-	arr_index = 0;
-	int i = 0, j = 0;
+	int count = 0, tok_index = 0, arr_index = 0;
 	reference *ref_arr;
 
-	ref_file = fopen("./ref", "r");
-	if (ref_file == NULL) {
-		perror("Error with reference file");
-		exit(1);
-	}
+	open_reference_file();
 
-	while ((token=fgetc(ref_file)) != EOF)
+	while (get_token() != EOF)
 		if (token == '%')
 			++count;
 	
@@ -34,7 +33,7 @@ void load_reference() {
 
 	rewind(ref_file);
 
-	while ((token=fgetc(ref_file)) != EOF) {
+	while (get_token() != EOF) {
 		if (token == '%') {
 			while ((token=fgetc(ref_file)) != EOF && token != '{')
 				if (token != '\n') {
@@ -47,7 +46,7 @@ void load_reference() {
 				ungetc(token, ref_file);
 		}
 		else if (token == '{') {
-			while ((token=fgetc(ref_file)) != EOF && token != '}')
+			while (get_token() != EOF && token != '}')
 				if (token != '\n') {
 					ref_arr[arr_index].url[tok_index] = token;
 					++tok_index;
@@ -59,4 +58,19 @@ void load_reference() {
 			continue;
 		tok_index = 0;
 	}
+}
+
+/* open_reference: opens the reference file and checks for error. */
+void open_reference_file() {
+	ref_file = fopen("./ref", "r");
+	if (ref_file == NULL) {
+		perror("Error with reference file");
+		exit(1);
+	}
+}
+
+/* get_token: Helps simplify the the while loop. */
+int get_token() {
+	token = fgetc(ref_file);
+	return token;
 }
