@@ -7,6 +7,7 @@
 #include "../include/url_preprocessor.h"
 
 extern reference* load_reference();
+extern void process_macro(FILE*, FILE*);
 
 int main() {
 	FILE *input_file = NULL,
@@ -32,8 +33,10 @@ int main() {
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == '{') {
 			token = fgetc(input_file);
-			if (token == '%')
+			if (token == '%') {
 				printf("Call function\n");
+				process_macro(input_file, output_file);
+			}
 			else {
 				assert(token != '%');
 				fputc('{', output_file);
@@ -46,7 +49,6 @@ int main() {
 		}
 		assert(input_file != NULL);
 	}
-
 
 	if (ferror(input_file)) {
 		fprintf(stderr, "Error with input file");
