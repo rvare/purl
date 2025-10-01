@@ -4,13 +4,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define IDSIZE 1024
-#define URLSIZE 2048
-
-typedef struct reference {
-	char id[IDSIZE];
-	char url[URLSIZE];
-} reference;
+#include "../include/url_preprocessor.h"
 
 void open_reference_file();
 int get_token();
@@ -18,7 +12,7 @@ int get_token();
 int token;
 FILE *ref_file = NULL;
 
-void load_reference() {
+reference* load_reference() {
 	int count = 0, tok_index = 0, arr_index = 0;
 	reference *ref_arr;
 
@@ -28,7 +22,6 @@ void load_reference() {
 		if (token == '%')
 			++count;
 	
-	printf("%d\n", count);
 	ref_arr = (reference*)calloc(count, sizeof(reference));
 
 	rewind(ref_file);
@@ -58,6 +51,15 @@ void load_reference() {
 			continue;
 		tok_index = 0;
 	}
+
+	if (ferror(ref_file)) {
+		fprintf(stderr, "Error with reference file\n");
+		exit(1);
+	}
+
+	fclose(ref_file);
+
+	return ref_arr;
 }
 
 /* open_reference: opens the reference file and checks for error. */

@@ -4,20 +4,15 @@
 #include <string.h>
 #include <assert.h>
 
-extern void load_reference();
+#include "../include/url_preprocessor.h"
+
+extern reference* load_reference();
 
 int main() {
-	FILE *ref_file = NULL,
-	*input_file = NULL,
+	FILE *input_file = NULL,
 	*output_file = NULL;
 
 	int token;
-
-	ref_file = fopen("./ref", "r");
-	if (ref_file == NULL) {
-		perror("Error with reference file");
-		return 1;
-	}
 
 	input_file = fopen("./test.md", "r");
 	if (input_file == NULL) {
@@ -31,32 +26,8 @@ int main() {
 		return 1;
 	}
 
-	load_reference();
-
-	while ((token=fgetc(ref_file)) != EOF) {
-		if (token == '%') {
-			while ((token=fgetc(ref_file)) != EOF && token != '{') {
-				printf("%c", token);
-			}
-			assert(token == '{');
-			ungetc(token, ref_file);
-		}
-		else if (token == '{') {
-			while ((token=fgetc(ref_file)) != EOF && token != '}') {
-				printf("%c", token);
-			}
-		}
-		else if (isspace(token)) {
-			continue;
-		}
-	}
-
-	if (ferror(ref_file)) {
-		fprintf(stderr, "Error with reference file\n");
-		return 1;
-	}
-
-	fclose(ref_file);
+	reference *ref_arr = load_reference();
+	assert(ref_arr != NULL);
 
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == '{') {
