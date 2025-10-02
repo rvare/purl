@@ -21,6 +21,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 		id[i] = token;
 	id[i] = '\0';
 
+	printf("here1\n");
 	if (ferror(input_file)) {
 		fprintf(stderr, "Error with input file");
 		exit(1);
@@ -32,15 +33,17 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 		exit(1);
 	}
 	
+	printf("here2\n");
 	for (i = 0, token=fgetc(input_file); i < URLSIZE-1 && token != '}' && token != EOF; ++i, token=fgetc(input_file))
 		replacement[i] = token;
 	replacement[i] = '\0';
 
-	if (ferror(output_file)) {
-		fprintf(stderr, "Error with output file");
+	if (ferror(input_file)) {
+		fprintf(stderr, "Error with input file");
 		exit(1);
 	}
 	
+	printf("here3\n");
 	printf("in process_macro: %s %s\n%s\n", id, replacement, ref_arr->arr[index].url);
 
 	fprintf(output_file, "[%s](%s)", replacement, ref_arr->arr[index].url);
@@ -52,10 +55,11 @@ int binary_search(char *id, reference *arr, int size) {
 	high = size - 1,
 	mid = 0;
 
+	printf("in binsearch\n");
 	while (low <= high) {
-		mid = (low+high) / 2;
+		mid = low + ((high-low) / 2);
 		if (strcmp(id, arr[mid].id) < 0)
-			high = mid + 1;
+			high = mid - 1;
 		else if (strcmp(id, arr[mid].id) > 0)
 			low = mid + 1;
 		else
