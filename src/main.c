@@ -6,9 +6,6 @@
 
 #include "../include/url_preprocessor.h"
 
-extern reference_array load_reference();
-extern void process_macro(FILE*, FILE*, reference_array*);
-
 int main() {
 	FILE *input_file = NULL,
 	*output_file = NULL;

@@ -46,6 +46,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	fprintf(output_file, "[%s](%s)", replacement, ref_arr->arr[index].url);
 }
 
+/* binary_search: performs binary search based on the id of the reference. */
 int binary_search(char *id, reference *arr, int size) {
 	int low = 0,
 	high = size - 1,
