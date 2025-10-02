@@ -29,7 +29,7 @@ reference_array load_reference() {
 
 	while (get_token() != EOF) {
 		if (token == '%') {
-			while ((token=fgetc(ref_file)) != EOF && token != '{')
+			while (get_token() != EOF && token != '{')
 				if (token != '\n') {
 					ref_arr.arr[arr_index].id[tok_index] = token;
 					++tok_index;

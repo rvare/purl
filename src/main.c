@@ -6,19 +6,26 @@
 
 #include "../include/url_preprocessor.h"
 
-int main() {
+int main(int argc, char *argv[]) {
+	if (argc <= 1) {
+		fprintf(stderr, "Error: no file given\n");
+		return 1;
+	}
+
 	FILE *input_file = NULL,
 	*output_file = NULL;
 
 	int token;
+	char out_name[512] = "out_";
 
-	input_file = fopen("./test.md", "r");
+	input_file = fopen(argv[1], "r");
 	if (input_file == NULL) {
 		perror("Error with input file");
 		return 1;
 	}
 
-	output_file = fopen("./out.md", "w");
+	strcat(out_name, argv[1]);
+	output_file = fopen(out_name, "w");
 	if (output_file == NULL) {
 		perror("Error with output file");
 		return 1;
@@ -26,6 +33,7 @@ int main() {
 
 	reference_array ref_arr = load_reference();
 	assert(ref_arr.arr != NULL);
+	assert(ref_arr.size > 0);
 
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == '{') {
