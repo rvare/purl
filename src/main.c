@@ -11,12 +11,16 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "Error: no file given\n");
 		return 1;
 	}
+	else if (argc <= 2) {
+		fprintf(stderr, "Error: no destination given\n");
+		return 1;
+	}
 
 	FILE *input_file = NULL,
 	*output_file = NULL;
 
 	int token;
-	char out_name[512] = "out_";
+	// char out_name[512] = "out_";
 
 	input_file = fopen(argv[1], "r");
 	if (input_file == NULL) {
@@ -24,8 +28,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	strcat(out_name, argv[1]);
-	output_file = fopen(out_name, "w");
+	// strcat(out_name, argv[1]);
+	output_file = fopen(argv[2], "w");
 	if (output_file == NULL) {
 		perror("Error with output file");
 		return 1;
