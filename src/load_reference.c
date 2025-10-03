@@ -73,7 +73,7 @@ int get_token() {
 void grab_id(reference_array *ref_arr) {
 	int tok_index = 0;
 	while (get_token() != EOF && g_token != '{')
-		if (g_token != '\n') {
+		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].id[tok_index] = g_token;
 			++tok_index;
 		}
@@ -84,7 +84,7 @@ void grab_id(reference_array *ref_arr) {
 void grab_url(reference_array *ref_arr) {
 	int tok_index = 0;
 	while (get_token() != EOF && g_token != '}')
-		if (g_token != '\n') {
+		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].url[tok_index] = g_token;
 			++tok_index;
 		}
