@@ -12,7 +12,7 @@ void grab_id(reference_array *);
 void grab_url(reference_array *);
 
 FILE *ref_file = NULL;
-int token, tok_index = 0, arr_index = 0;
+int g_token, g_arr_index = 0;
 
 reference_array load_reference() {
 	int count = 0;
@@ -21,7 +21,7 @@ reference_array load_reference() {
 	open_reference_file();
 
 	while (get_token() != EOF)
-		if (token == '%')
+		if (g_token == '%')
 			++count;
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
@@ -30,19 +30,18 @@ reference_array load_reference() {
 	rewind(ref_file);
 
 	while (get_token() != EOF) {
-		if (token == '%') {
+		if (g_token == '%') {
 			grab_id(&ref_arr);
-			assert(token == '{');
-			if (token == '{')
-				ungetc(token, ref_file);
+			assert(g_token == '{');
+			if (g_token == '{')
+				ungetc(g_token, ref_file);
 		}
-		else if (token == '{') {
+		else if (g_token == '{') {
 			grab_url(&ref_arr);
-			++arr_index;
+			++g_arr_index;
 		}
-		else if (isspace(token))
+		else if (isspace(g_token))
 			continue;
-		tok_index = 0;
 	}
 
 	if (ferror(ref_file)) {
@@ -66,28 +65,28 @@ void open_reference_file() {
 
 /* get_token: Helps simplify the the while loop. */
 int get_token() {
-	token = fgetc(ref_file);
-	return token;
+	g_token = fgetc(ref_file);
+	return g_token;
 }
 
 /* grab_id: Grab the ID from reference file. */
 void grab_id(reference_array *ref_arr) {
-	assert(tok_index == 0);
-	while (get_token() != EOF && token != '{')
-		if (token != '\n') {
-			ref_arr->arr[arr_index].id[tok_index] = token;
+	int tok_index = 0;
+	while (get_token() != EOF && g_token != '{')
+		if (g_token != '\n') {
+			ref_arr->arr[g_arr_index].id[tok_index] = g_token;
 			++tok_index;
 		}
-	ref_arr->arr[arr_index].id[tok_index] = '\0';
+	ref_arr->arr[g_arr_index].id[tok_index] = '\0';
 }
 
 /* grab_url: Grab the URL from reference file. */
 void grab_url(reference_array *ref_arr) {
-	assert(tok_index == 0);
-	while (get_token() != EOF && token != '}')
-		if (token != '\n') {
-			ref_arr->arr[arr_index].url[tok_index] = token;
+	int tok_index = 0;
+	while (get_token() != EOF && g_token != '}')
+		if (g_token != '\n') {
+			ref_arr->arr[g_arr_index].url[tok_index] = g_token;
 			++tok_index;
 		}
-	ref_arr->arr[arr_index].url[tok_index] = '\0';
+	ref_arr->arr[g_arr_index].url[tok_index] = '\0';
 }
