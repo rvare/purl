@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 	FILE *input_file = NULL,
 	*output_file = NULL;
 
-	int token;
+	register int token;
 
 	input_file = fopen(argv[1], "r");
 	if (input_file == NULL) {
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == OPENBRACE) {
 			token = fgetc(input_file);
-			if (token == PERCENTSIGN) {
+			if (token == IDINDICATOR) {
 				printf("Call function\n");
 				process_macro(input_file, output_file, &ref_arr);
 			}

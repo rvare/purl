@@ -15,13 +15,13 @@ FILE *ref_file = NULL;
 int g_token, g_arr_index = 0;
 
 reference_array load_reference() {
-	int count = 0;
+	register int count = 0;
 	reference_array ref_arr;
 
 	open_reference_file();
 
 	while (get_token() != EOF)
-		if (g_token == '%')
+		if (g_token == IDINDICATOR)
 			++count;
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
@@ -31,13 +31,13 @@ reference_array load_reference() {
 	rewind(ref_file);
 
 	while (get_token() != EOF) {
-		if (g_token == '%') {
+		if (g_token == IDINDICATOR) {
 			grab_id(&ref_arr);
 			assert(g_token == '{');
-			if (g_token == '{')
+			if (g_token == OPENBRACE)
 				ungetc(g_token, ref_file);
 		}
-		else if (g_token == '{') {
+		else if (g_token == OPENBRACE) {
 			grab_url(&ref_arr);
 			++g_arr_index;
 		}
@@ -71,8 +71,8 @@ int get_token() {
 
 /* grab_id: Grab the ID from reference file. */
 void grab_id(reference_array *ref_arr) {
-	int tok_index = 0;
-	while (get_token() != EOF && g_token != '{')
+	register int tok_index = 0;
+	while (get_token() != EOF && g_token != OPENBRACE)
 		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].id[tok_index] = g_token;
 			++tok_index;
@@ -82,8 +82,8 @@ void grab_id(reference_array *ref_arr) {
 
 /* grab_url: Grab the URL from reference file. */
 void grab_url(reference_array *ref_arr) {
-	int tok_index = 0;
-	while (get_token() != EOF && g_token != '}')
+	register int tok_index = 0;
+	while (get_token() != EOF && g_token != CLOSEBRACE)
 		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].url[tok_index] = g_token;
 			++tok_index;

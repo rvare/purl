@@ -7,9 +7,9 @@
 #define IDSIZE		1024
 #define URLSIZE		2048
 
+#define IDINDICATOR	'%'
 #define OPENBRACE	'{'
 #define CLOSEBRACE	'}'
-#define PERCENTSIGN	'%'
 
 typedef struct reference {
 	char id[IDSIZE];

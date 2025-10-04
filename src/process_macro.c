@@ -13,7 +13,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	assert(output_file != NULL);
 	assert(ref_arr != NULL);
 
-	int token, i;
+	register int token, i;
 	char id[IDSIZE];
 
 	// Get the ID
@@ -27,7 +27,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	}
 
 	// Find the ID for the URL
-	int index = binary_search(id, ref_arr->arr, ref_arr->size);
+	register int index = binary_search(id, ref_arr->arr, ref_arr->size);
 	if (index == -1) {
 		fprintf(stderr, "Error: could not find id %s in reference file", id);
 		exit(1);
@@ -48,7 +48,7 @@ int binary_search(char *id, reference *arr, int size) {
 	assert(id != NULL);
 	assert(arr != NULL);
 
-	int low = 0,
+	register int low = 0,
 	high = size - 1,
 	mid = 0;
 
