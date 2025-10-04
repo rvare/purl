@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
 	*output_file = NULL;
 
 	int token;
-	// char out_name[512] = "out_";
 
 	input_file = fopen(argv[1], "r");
 	if (input_file == NULL) {
@@ -28,7 +27,6 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// strcat(out_name, argv[1]);
 	output_file = fopen(argv[2], "w");
 	if (output_file == NULL) {
 		perror("Error with output file");
@@ -40,9 +38,9 @@ int main(int argc, char *argv[]) {
 	assert(ref_arr.size > 0);
 
 	while ((token=fgetc(input_file)) != EOF) {
-		if (token == '{') {
+		if (token == OPENBRACE) {
 			token = fgetc(input_file);
-			if (token == '%') {
+			if (token == PERCENTSIGN) {
 				printf("Call function\n");
 				process_macro(input_file, output_file, &ref_arr);
 			}

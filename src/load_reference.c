@@ -26,6 +26,7 @@ reference_array load_reference() {
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
 	ref_arr.size = count;
+	assert(ref_arr.arr != NULL);
 
 	rewind(ref_file);
 
@@ -65,8 +66,7 @@ void open_reference_file() {
 
 /* get_token: Helps simplify the the while loop. */
 int get_token() {
-	g_token = fgetc(ref_file);
-	return g_token;
+	return g_token = fgetc(ref_file);
 }
 
 /* grab_id: Grab the ID from reference file. */

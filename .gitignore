@@ -2,3 +2,7 @@
 /build
 *.o
 a.exe
+ref
+test.md
+out.md
+

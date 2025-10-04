@@ -17,7 +17,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	char id[IDSIZE];
 
 	// Get the ID
-	for (i = 0, token=fgetc(input_file); i < IDSIZE-1 && token != '}' && token != EOF; ++i, token=fgetc(input_file))
+	for (i = 0, token=fgetc(input_file); i < IDSIZE-1 && token != CLOSEBRACE && token != EOF; ++i, token=fgetc(input_file))
 		id[i] = token;
 	id[i] = '\0';
 
@@ -26,6 +26,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 		exit(1);
 	}
 
+	// Find the ID for the URL
 	int index = binary_search(id, ref_arr->arr, ref_arr->size);
 	if (index == -1) {
 		fprintf(stderr, "Error: could not find id %s in reference file", id);
