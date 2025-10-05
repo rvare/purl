@@ -1,3 +1,22 @@
+/*
+Purl a preprocessor for URL links.
+Copyright (C) 2025  Richard Ernest Varela
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -11,7 +30,18 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "Error: no file given\n");
 		return 1;
 	}
-	else if (argc <= 2) {
+
+	if (strcmp(argv[1], "--version") == 0) {
+		printf("Purl v1.0\n"
+				"Copyright (C) 2025 Richard Ernest Varela\n"
+				"License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
+				"This program comes with ABSOLUTELY NO WARRANTY.\n"
+				"This is free software: you are free to change and redistribute it.\n"
+				);
+		return 0;
+	}
+
+	if (argc <= 2) {
 		fprintf(stderr, "Error: no destination given\n");
 		return 1;
 	}
@@ -45,7 +75,7 @@ int main(int argc, char *argv[]) {
 				process_macro(input_file, output_file, &ref_arr);
 			}
 			else {
-				assert(token != '%');
+				assert(token != IDINDICATOR);
 				fputc('{', output_file);
 				fputc(token, output_file);
 			}

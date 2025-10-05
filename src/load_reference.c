@@ -1,3 +1,22 @@
+/*
+Purl a preprocessor for URL links.
+Copyright (C) 2025  Richard Ernest Varela
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -11,14 +30,18 @@ int get_token();
 void grab_id(reference_array *);
 void grab_url(reference_array *);
 
-FILE *ref_file = NULL;
 int g_token, g_arr_index = 0;
+FILE *ref_file = NULL;
 
 reference_array load_reference() {
 	register int count = 0;
 	reference_array ref_arr;
 
-	open_reference_file();
+	ref_file = fopen("./ref", "r");
+	if (ref_file == NULL) {
+		perror("Error with reference file");
+		exit(1);
+	}
 
 	while (get_token() != EOF)
 		if (g_token == IDINDICATOR)
@@ -53,15 +76,6 @@ reference_array load_reference() {
 	fclose(ref_file);
 
 	return ref_arr;
-}
-
-/* open_reference: opens the reference file and checks for error. */
-void open_reference_file() {
-	ref_file = fopen("./ref", "r");
-	if (ref_file == NULL) {
-		perror("Error with reference file");
-		exit(1);
-	}
 }
 
 /* get_token: Helps simplify the the while loop. */
