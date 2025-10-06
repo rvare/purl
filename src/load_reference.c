@@ -49,7 +49,6 @@ reference_array load_reference() {
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
 	ref_arr.size = count;
-	assert(ref_arr.arr != NULL);
 
 	rewind(ref_file);
 

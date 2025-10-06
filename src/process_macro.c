@@ -28,10 +28,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 int binary_search(char *id, reference *arr, int size);
 
 void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr) {
-	assert(input_file != NULL);
-	assert(output_file != NULL);
-	assert(ref_arr != NULL);
-
 	register int token, i;
 	char id[IDSIZE];
 
@@ -52,8 +48,6 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 		exit(1);
 	}
 	
-	printf("in process_macro: %s %s\n", id, ref_arr->arr[index].url);
-
 	fprintf(output_file, "%s", ref_arr->arr[index].url);
 
 	if (ferror(output_file)) {
@@ -64,9 +58,6 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 
 /* binary_search: performs binary search based on the id of the reference. */
 int binary_search(char *id, reference *arr, int size) {
-	assert(id != NULL);
-	assert(arr != NULL);
-
 	register int low = 0,
 	high = size - 1,
 	mid = 0;

@@ -64,27 +64,20 @@ int main(int argc, char *argv[]) {
 	}
 
 	reference_array ref_arr = load_reference();
-	assert(ref_arr.arr != NULL);
-	assert(ref_arr.size > 0);
 
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == OPENBRACE) {
 			token = fgetc(input_file);
-			if (token == IDINDICATOR) {
-				printf("Call function\n");
+			if (token == IDINDICATOR)
 				process_macro(input_file, output_file, &ref_arr);
-			}
 			else {
 				assert(token != IDINDICATOR);
 				fputc('{', output_file);
 				fputc(token, output_file);
 			}
 		}
-		else {
-			assert(output_file != NULL);
+		else
 			fputc(token, output_file);
-		}
-		assert(input_file != NULL);
 	}
 
 	if (ferror(input_file)) {
