@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <assert.h>
 
 #include "../include/url_preprocessor.h"
 
@@ -55,7 +54,6 @@ reference_array load_reference() {
 	while (get_token() != EOF) {
 		if (g_token == IDINDICATOR) {
 			grab_id(&ref_arr);
-			assert(g_token == '{');
 			if (g_token == OPENBRACE)
 				ungetc(g_token, ref_file);
 		}

@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <assert.h>
 
 #include "../include/url_preprocessor.h"
 
@@ -71,7 +70,6 @@ int main(int argc, char *argv[]) {
 			if (token == IDINDICATOR)
 				process_macro(input_file, output_file, &ref_arr);
 			else {
-				assert(token != IDINDICATOR);
 				fputc('{', output_file);
 				fputc(token, output_file);
 			}
