@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[]) {
 	if (argc <= 1) {
-		fprintf(stderr, "Error: no file given\n");
+		fprintf(stderr, "Error: no input file given or no arguments given\n");
 		return 1;
 	}
 
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (argc <= 2) {
-		fprintf(stderr, "Error: no destination given\n");
+		fprintf(stderr, "Error: no destination file given\n");
 		return 1;
 	}
 

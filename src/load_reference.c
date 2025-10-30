@@ -47,6 +47,10 @@ reference_array load_reference() {
 			++count;
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
+	if (ref_arr.arr == NULL) {
+		fprintf(stderr, "Error: Could not allocate memory for references.\n");
+		exit(1);
+	}
 	ref_arr.size = count;
 
 	rewind(ref_file);
