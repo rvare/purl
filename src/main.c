@@ -1,6 +1,6 @@
 /*
 Purl a preprocessor for URL links.
-Copyright (C) 2025  Richard Ernest Varela
+Copyright (C) 2026  Richard Ernest Varela
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,22 +26,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[]) {
 	if (argc <= 1) {
-		fprintf(stderr, "Error: no input file given or no arguments given\n");
+		fputs("Error: no input file given or no arguments given\n", stderr);
 		return 1;
 	}
 
 	if (strcmp(argv[1], "--version") == 0) {
-		printf("Purl v1.0\n"
-				"Copyright (C) 2025 Richard Ernest Varela\n"
+		puts(	"Purl v1.0\n"
+				"Copyright (C) 2026 Richard Ernest Varela\n"
 				"License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
 				"This program comes with ABSOLUTELY NO WARRANTY.\n"
-				"This is free software: you are free to change and redistribute it.\n"
+				"This is free software: you are free to change and redistribute it."
 				);
 		return 0;
 	}
 
 	if (argc <= 2) {
-		fprintf(stderr, "Error: no destination file given\n");
+		fputs("Error: no destination file given\n", stderr);
 		return 1;
 	}
 
@@ -79,12 +79,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (ferror(input_file)) {
-		fprintf(stderr, "Error with input file");
+		perror("Error with input file");
 		return 1;
 	}
 
 	if (ferror(output_file)) {
-		fprintf(stderr, "Error with output file");
+		perror("Error with output file");
 		return 1;
 	}
 

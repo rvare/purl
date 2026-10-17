@@ -36,22 +36,22 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	id[i] = '\0';
 
 	if (ferror(input_file)) {
-		fprintf(stderr, "Error with input file\n");
-		exit(1);
+		fputs("Error with input file\n", stderr);
+		exit(EXIT_FAILURE);
 	}
 
 	// Find the ID for the URL
 	register int index = binary_search(id, ref_arr->arr, ref_arr->size);
 	if (index == -1) {
 		fprintf(stderr, "Error: could not find id %s in reference file", id);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	
 	fprintf(output_file, "%s", ref_arr->arr[index].url);
 
 	if (ferror(output_file)) {
-		fprintf(stderr, "Error with output file\n");
-		exit(1);
+		fputs("Error with output file\n", stderr);
+		exit(EXIT_FAILURE);
 	}
 }
 

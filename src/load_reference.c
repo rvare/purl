@@ -39,7 +39,7 @@ reference_array load_reference() {
 	ref_file = fopen("./ref", "r");
 	if (ref_file == NULL) {
 		perror("Error with reference file");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	while (get_token() != EOF)
@@ -48,8 +48,8 @@ reference_array load_reference() {
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
 	if (ref_arr.arr == NULL) {
-		fprintf(stderr, "Error: Could not allocate memory for references.\n");
-		exit(1);
+		fputs("Error: Could not allocate memory for references.\n", stderr);
+		exit(EXIT_FAILURE);
 	}
 	ref_arr.size = count;
 
@@ -70,8 +70,8 @@ reference_array load_reference() {
 	}
 
 	if (ferror(ref_file)) {
-		fprintf(stderr, "Error with reference file\n");
-		exit(1);
+		fputs("Error with reference file\n", stderr);
+		exit(EXIT_FAILURE);
 	}
 
 	fclose(ref_file);
