@@ -1,6 +1,6 @@
 /*
 Purl a preprocessor for URL links.
-Copyright (C) 2025  Richard Ernest Varela
+Copyright (C) 2026  Richard Ernest Varela
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,9 +31,14 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	char id[IDSIZE];
 
 	// Get the ID
-	for (i = 0, token=fgetc(input_file); i < IDSIZE-1 && token != CLOSEBRACE && token != EOF; ++i, token=fgetc(input_file))
+	for (	i = 0, token=fgetc(input_file);
+			i < IDSIZE-1 && token != CLOSEBRACE && token != EOF;
+			++i, token=fgetc(input_file)
+		)
 		id[i] = token;
-	id[i] = '\0';
+
+	if (i < IDSIZE)
+		id[i] = '\0';
 
 	if (ferror(input_file)) {
 		fputs("Error with input file\n", stderr);

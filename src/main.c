@@ -24,21 +24,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "../include/url_preprocessor.h"
 
+void parse_cmd_args(char *);
+void show_help();
+void show_version();
+
 int main(int argc, char *argv[]) {
 	if (argc <= 1) {
 		fputs("Error: no input file given or no arguments given\n", stderr);
 		return 1;
 	}
 
-	if (strcmp(argv[1], "--version") == 0) {
-		puts(	"Purl v1.0\n"
-				"Copyright (C) 2026 Richard Ernest Varela\n"
-				"License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
-				"This program comes with ABSOLUTELY NO WARRANTY.\n"
-				"This is free software: you are free to change and redistribute it."
-				);
-		return 0;
-	}
+	if (argv[1][0] == '-')
+		parse_cmd_args(argv[1]);
 
 	if (argc <= 2) {
 		fputs("Error: no destination file given\n", stderr);
@@ -92,4 +89,35 @@ int main(int argc, char *argv[]) {
 	fclose(output_file);
 
 	return 0;
+}
+
+void parse_cmd_args(char *args) {
+	if (strcmp(args, "--version") == 0) {
+		show_version();
+		exit(EXIT_SUCCESS);
+	}
+	else if (strcmp(args, "--help") == 0) {
+		show_help();
+		exit(EXIT_SUCCESS);
+	}
+	else {
+		fputs("Unrecognized argument\n", stderr);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void show_help() {
+	puts(	"purl [OPTIONS] [INPUT FILE] [OUTPUT FILE]"
+			"    --help     display this help and exit\n"
+			"    --version  display version and copyright information"
+		);
+}
+
+void show_version() {
+		puts(	"Purl v2.0\n"
+				"Copyright (C) 2026 Richard Ernest Varela\n"
+				"License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
+				"This program comes with ABSOLUTELY NO WARRANTY.\n"
+				"This is free software: you are free to change and redistribute it."
+				);
 }

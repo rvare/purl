@@ -1,6 +1,6 @@
 /*
 Purl a preprocessor for URL links.
-Copyright (C) 2025  Richard Ernest Varela
+Copyright (C) 2026  Richard Ernest Varela
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ reference_array load_reference() {
 	}
 
 	while (get_token() != EOF)
-		if (g_token == IDINDICATOR)
+		if (g_token == ID_INDICATOR)
 			++count;
 	
 	ref_arr.arr = (reference*)calloc(count, sizeof(reference));
@@ -56,12 +56,12 @@ reference_array load_reference() {
 	rewind(ref_file);
 
 	while (get_token() != EOF) {
-		if (g_token == IDINDICATOR) {
+		if (g_token == ID_INDICATOR) {
 			grab_id(&ref_arr);
-			if (g_token == OPENBRACE)
+			if (g_token == OPEN_BRACE)
 				ungetc(g_token, ref_file);
 		}
-		else if (g_token == OPENBRACE) {
+		else if (g_token == OPEN_BRACE) {
 			grab_url(&ref_arr);
 			++g_arr_index;
 		}
@@ -87,7 +87,7 @@ int get_token() {
 /* grab_id: Grab the ID from reference file. */
 void grab_id(reference_array *ref_arr) {
 	register int tok_index = 0;
-	while (get_token() != EOF && g_token != OPENBRACE)
+	while (get_token() != EOF && g_token != OPEN_BRACE)
 		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].id[tok_index] = g_token;
 			++tok_index;
@@ -98,7 +98,7 @@ void grab_id(reference_array *ref_arr) {
 /* grab_url: Grab the URL from reference file. */
 void grab_url(reference_array *ref_arr) {
 	register int tok_index = 0;
-	while (get_token() != EOF && g_token != CLOSEBRACE)
+	while (get_token() != EOF && g_token != CLOSE_BRACE)
 		if (!isspace(g_token)) {
 			ref_arr->arr[g_arr_index].url[tok_index] = g_token;
 			++tok_index;
