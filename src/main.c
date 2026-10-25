@@ -24,18 +24,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "../include/url_preprocessor.h"
 
-void parse_cmd_args(char *);
+#define PATH_SIZE 512
+
+typedef struct {
+	char input_path[PATH_SIZE];
+	char output_path[PATH_SIZE];
+	char ref_path[PATH_SIZE];
+} CmdArgs;
+
+void parse_cmd_args(int, char **, CmdArgs *);
 void show_help();
 void show_version();
 
 int main(int argc, char *argv[]) {
 	if (argc <= 1) {
-		fputs("Error: no input file given or no arguments given\n", stderr);
+		fputs("Error: no input file or arguments given\n", stderr);
 		return 1;
 	}
 
-	if (argv[1][0] == '-')
-		parse_cmd_args(argv[1]);
+	CmdArgs cmd_args = {
+		.input_path[0] = '\0',
+		.output_path[0] = '\0',
+		.ref_path[0] = '\0'
+		};
+
+	parse_cmd_args(argc, argv, &cmd_args);
 
 	if (argc <= 2) {
 		fputs("Error: no destination file given\n", stderr);
@@ -47,24 +60,24 @@ int main(int argc, char *argv[]) {
 
 	register int token;
 
-	input_file = fopen(argv[1], "r");
+	input_file = fopen(cmd_args.input_path, "r");
 	if (input_file == NULL) {
 		perror("Error with input file");
 		return 1;
 	}
 
-	output_file = fopen(argv[2], "w");
+	output_file = fopen(cmd_args.output_path, "w");
 	if (output_file == NULL) {
 		perror("Error with output file");
 		return 1;
 	}
 
-	reference_array ref_arr = load_reference();
+	reference_array ref_arr = load_reference(cmd_args.ref_path);
 
 	while ((token=fgetc(input_file)) != EOF) {
-		if (token == OPENBRACE) {
+		if (token == OPEN_BRACE) {
 			token = fgetc(input_file);
-			if (token == IDINDICATOR)
+			if (token == ID_INDICATOR)
 				process_macro(input_file, output_file, &ref_arr);
 			else {
 				fputc('{', output_file);
@@ -91,23 +104,47 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void parse_cmd_args(char *args) {
-	if (strcmp(args, "--version") == 0) {
+void parse_cmd_args(int argc, char **argv, CmdArgs* cmd_args) {
+	if (strcmp(argv[1], "--version") == 0) {
 		show_version();
 		exit(EXIT_SUCCESS);
 	}
-	else if (strcmp(args, "--help") == 0) {
+	else if (strcmp(argv[1], "--help") == 0) {
 		show_help();
 		exit(EXIT_SUCCESS);
 	}
-	else {
-		fputs("Unrecognized argument\n", stderr);
-		exit(EXIT_FAILURE);
+
+	if (argv[1][0] != '-') {
+		strncpy(cmd_args->input_path, argv[1], PATH_SIZE);
+		return;
+	}
+
+	for (size_t i = 1; i < argc; ++i) {
+		if (argv[i][0] != '-') {
+			fputs("Unrecognized argument\n", stderr);
+			exit(EXIT_FAILURE);
+		}
+
+		switch(argv[i][1]) {
+			case 'i':
+				strncpy(cmd_args->input_path, argv[i]+3, PATH_SIZE);
+				break;
+			case 'o':
+				strncpy(cmd_args->output_path, argv[i]+3, PATH_SIZE);
+				break;
+			case 'r':
+				strncpy(cmd_args->ref_path, argv[i]+3, PATH_SIZE);
+				break;
+			default:
+				fputs("Unrecognized argument\n", stderr);
+				exit(EXIT_FAILURE);
+				break;
+		}
 	}
 }
 
 void show_help() {
-	puts(	"purl [OPTIONS] [INPUT FILE] [OUTPUT FILE]"
+	puts(	"purl [OPTIONS] <refence file> <input file> <output file>\n"
 			"    --help     display this help and exit\n"
 			"    --version  display version and copyright information"
 		);

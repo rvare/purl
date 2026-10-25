@@ -32,7 +32,7 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 
 	// Get the ID
 	for (	i = 0, token=fgetc(input_file);
-			i < IDSIZE-1 && token != CLOSEBRACE && token != EOF;
+			i < IDSIZE-1 && token != CLOSE_BRACE && token != EOF;
 			++i, token=fgetc(input_file)
 		)
 		id[i] = token;

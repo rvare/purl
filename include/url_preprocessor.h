@@ -21,5 +21,5 @@ typedef struct reference_array {
 	int size;
 } reference_array;
 
-reference_array load_reference();
+reference_array load_reference(char *);
 void process_macro(FILE *, FILE *, reference_array *);

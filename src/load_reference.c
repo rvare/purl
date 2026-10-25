@@ -32,11 +32,11 @@ void grab_url(reference_array *);
 int g_token, g_arr_index = 0;
 FILE *ref_file = NULL;
 
-reference_array load_reference() {
+reference_array load_reference(char* ref_path) {
 	register int count = 0;
 	reference_array ref_arr;
 
-	ref_file = fopen("./ref", "r");
+	ref_file = fopen(ref_path, "r");
 	if (ref_file == NULL) {
 		perror("Error with reference file");
 		exit(EXIT_FAILURE);
