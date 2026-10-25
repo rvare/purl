@@ -24,7 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "../include/url_preprocessor.h"
 
-#define PATH_SIZE 512
+#define PATH_SIZE		512
+#define CMD_VAL_OFFSET	3
 
 typedef struct {
 	char input_path[PATH_SIZE];
@@ -42,11 +43,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	CmdArgs cmd_args = {
-		.input_path[0] = '\0',
-		.output_path[0] = '\0',
-		.ref_path[0] = '\0'
-		};
+	CmdArgs cmd_args = {0};
 
 	parse_cmd_args(argc, argv, &cmd_args);
 
@@ -55,10 +52,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	FILE *input_file = NULL,
-	*output_file = NULL;
-
-	register int token;
+	FILE *input_file = NULL, *output_file = NULL;
 
 	input_file = fopen(cmd_args.input_path, "r");
 	if (input_file == NULL) {
@@ -66,14 +60,18 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	output_file = fopen(cmd_args.output_path, "w");
-	if (output_file == NULL) {
-		perror("Error with output file");
-		return 1;
+	if (cmd_args.output_path[0] == '\0')
+		output_file = stdout;
+	else {
+		if ((output_file = fopen(cmd_args.output_path, "w")) == NULL) {
+			perror("Error with output file");
+			return 1;
+		}
 	}
 
-	reference_array ref_arr = load_reference(cmd_args.ref_path);
+	reference_array ref_arr = load_reference(cmd_args.ref_path[0] == '\0' ? "./ref" : cmd_args.ref_path);
 
+	register int token;
 	while ((token=fgetc(input_file)) != EOF) {
 		if (token == OPEN_BRACE) {
 			token = fgetc(input_file);
@@ -127,13 +125,13 @@ void parse_cmd_args(int argc, char **argv, CmdArgs* cmd_args) {
 
 		switch(argv[i][1]) {
 			case 'i':
-				strncpy(cmd_args->input_path, argv[i]+3, PATH_SIZE);
+				strncpy(cmd_args->input_path, argv[i]+CMD_VAL_OFFSET, PATH_SIZE);
 				break;
 			case 'o':
-				strncpy(cmd_args->output_path, argv[i]+3, PATH_SIZE);
+				strncpy(cmd_args->output_path, argv[i]+CMD_VAL_OFFSET, PATH_SIZE);
 				break;
 			case 'r':
-				strncpy(cmd_args->ref_path, argv[i]+3, PATH_SIZE);
+				strncpy(cmd_args->ref_path, argv[i]+CMD_VAL_OFFSET, PATH_SIZE);
 				break;
 			default:
 				fputs("Unrecognized argument\n", stderr);
@@ -144,7 +142,12 @@ void parse_cmd_args(int argc, char **argv, CmdArgs* cmd_args) {
 }
 
 void show_help() {
-	puts(	"purl [OPTIONS] <refence file> <input file> <output file>\n"
+	puts(	"usage: purl [-i=<path>] [-r=<path>] [-o=<path>]\n"
+			"   or: purl <input file path>\n"
+			"\narguments:\n"
+			"    -i         set path of input file\n"
+			"    -r         set path of refernce file\n"
+			"    -o         set path of output file\n"
 			"    --help     display this help and exit\n"
 			"    --version  display version and copyright information"
 		);
