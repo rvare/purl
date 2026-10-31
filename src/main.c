@@ -47,11 +47,6 @@ int main(int argc, char *argv[]) {
 
 	parse_cmd_args(argc, argv, &cmd_args);
 
-	if (argc <= 2) {
-		fputs("Error: no destination file given\n", stderr);
-		return 1;
-	}
-
 	FILE *input_file = NULL, *output_file = NULL;
 
 	input_file = fopen(cmd_args.input_path, "r");
@@ -159,7 +154,7 @@ void show_version() {
 				"License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
 				"This program comes with ABSOLUTELY NO WARRANTY.\n"
 				"This is free software: you are free to change and redistribute it."
-				);
+			);
 }
 
 // Comparator used to compare the reference ids with bsearch.

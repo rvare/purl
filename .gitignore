@@ -1,8 +1,8 @@
 *.swp
-/build
+*~
 *.o
 a.exe
+purl.exe
+purl
 ref
-test.md
-out.md
-
+/build
