@@ -7,9 +7,9 @@
 #define IDSIZE		1024
 #define URLSIZE		2048
 
-#define IDINDICATOR	'%'
-#define OPENBRACE	'{'
-#define CLOSEBRACE	'}'
+#define ID_INDICATOR	'%'
+#define OPEN_BRACE		'{'
+#define CLOSE_BRACE		'}'
 
 typedef struct reference {
 	char id[IDSIZE];
@@ -21,5 +21,5 @@ typedef struct reference_array {
 	int size;
 } reference_array;
 
-reference_array load_reference();
+reference_array load_reference(char *);
 void process_macro(FILE *, FILE *, reference_array *);
