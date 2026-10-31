@@ -23,8 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <string.h>
 
 #include "../include/url_preprocessor.h"
-
-int binary_search(char *id, reference *arr, int size);
+extern int id_comparator(const void *, const void *);
 
 void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr) {
 	register int token, i;
@@ -46,13 +45,13 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	}
 
 	// Find the ID for the URL
-	register int index = binary_search(id, ref_arr->arr, ref_arr->size);
-	if (index == -1) {
+	reference *ref = bsearch(&id, ref_arr->arr, ref_arr->size, sizeof(reference), id_comparator);
+	if (ref == NULL) {
 		fprintf(stderr, "Error: could not find id %s in reference file", id);
 		exit(EXIT_FAILURE);
 	}
-	
-	fprintf(output_file, "%s", ref_arr->arr[index].url);
+
+	fprintf(output_file, "%s", ref->url);
 
 	if (ferror(output_file)) {
 		fputs("Error with output file\n", stderr);
@@ -60,21 +59,3 @@ void process_macro(FILE *input_file, FILE *output_file, reference_array *ref_arr
 	}
 }
 
-/* binary_search: performs binary search based on the id of the reference. */
-int binary_search(char *id, reference *arr, int size) {
-	register int low = 0,
-	high = size - 1,
-	mid = 0;
-
-	while (low <= high) {
-		mid = low + ((high-low) / 2);
-		if (strcmp(id, arr[mid].id) < 0)
-			high = mid - 1;
-		else if (strcmp(id, arr[mid].id) > 0)
-			low = mid + 1;
-		else
-			return mid;
-	}
-
-	return -1;
-}

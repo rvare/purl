@@ -161,3 +161,9 @@ void show_version() {
 				"This is free software: you are free to change and redistribute it."
 				);
 }
+
+// Comparator used to compare the reference ids with bsearch.
+// This is used by process_id and load_reference. Putting this here is easier to share.
+int id_comparator(const void *left, const void *right) {
+	return strcmp(((reference*)left)->id, ((reference*)right)->id);
+}

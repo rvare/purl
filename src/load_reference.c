@@ -28,6 +28,7 @@ void open_reference_file();
 int get_token();
 void grab_id(reference_array *);
 void grab_url(reference_array *);
+extern int id_comparator(const void *, const void *);
 
 int g_token, g_arr_index = 0;
 FILE *ref_file = NULL;
@@ -76,6 +77,8 @@ reference_array load_reference(char* ref_path) {
 
 	fclose(ref_file);
 
+	qsort(ref_arr.arr, count, sizeof(reference), id_comparator);
+
 	return ref_arr;
 }
 
@@ -105,3 +108,4 @@ void grab_url(reference_array *ref_arr) {
 		}
 	ref_arr->arr[g_arr_index].url[tok_index] = '\0';
 }
+
